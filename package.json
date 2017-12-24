@@ -1,0 +1,27 @@
+{
+  "name": "new-year-date",
+  "version": "1.0.0",
+  "description": "Find your new year date among your Facebook friends",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdithyaReddy/NewYearDate.git"
+  },
+  "author": "Adithya Reddy & Piyush Kumar Tiwari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AdithyaReddy/NewYearDate/issues"
+  },
+  "homepage": "https://github.com/AdithyaReddy/NewYearDate#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongodb": "^2.2.33"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.3"
+  }
+}
