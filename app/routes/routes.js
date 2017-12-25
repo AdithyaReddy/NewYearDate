@@ -75,8 +75,5 @@ module.exports = function(app, db) {
             });
         }
       });
-
-      res.send('Dude, this is awesome')
     });
-  
   };
