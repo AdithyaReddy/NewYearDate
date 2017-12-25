@@ -43,7 +43,39 @@ module.exports = function(app, db) {
     });
   
     app.post('/updatecrushes', (req, res) => {
-      console.log(req.body)
+      const user_facebook_id = req.body.facebook_id;
+      const crush_list = req.body.crush_list;
+      var details = {'facebook_id' : user_facebook_id};
+      db.collection('users').findOne(details, (err, item) => {
+        if (err) return res.send('There was an error while fetching User!')
+        if (item) {
+            var crush_list = item.crush_list;
+            if (crush_list.length > 0) {
+                res.send('You\'ve already chosen your crush list. Kitti baar choose karoge?');
+            }
+            else {
+                item.crush_list = crush_list;
+                db.collection('users').insert(item, (err, result) => {
+                    if (err) { 
+                      res.send({ 'error': 'An error has occurred while creating the user object' }); 
+                    } else {
+                      res.send('Successfully updated crush list for the facebook id : ' + result.ops[0]);
+                    }
+                });
+            }
+        }
+        else {
+            item.crush_list = crush_list;
+            db.collection('users').insert(item, (err, result) => {
+                if (err) { 
+                  res.send({ 'error': 'An error has occurred while creating the user object' }); 
+                } else {
+                  res.send('Successfully updated crush list for the facebook id : ' + result.ops[0]);
+                }
+            });
+        }
+      });
+
       res.send('Dude, this is awesome')
     });
   
