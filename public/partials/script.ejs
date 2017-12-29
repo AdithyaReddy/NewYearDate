@@ -1,0 +1,120 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>
+  var Constants = {
+    APP_ID: '1613863252008913',
+    CONNECTED: 'connected',
+    NOT_AUTHORIZED: 'not_authorized'
+  };
+  var profileFields = [
+    'id',
+    'first_name',
+    'middle_name',
+    'last_name',
+    'name',
+    'email',
+    'birthday',
+    'gender',
+    'location',
+    'age_range'
+  ];
+
+  var MatchApp = (function() {
+    function getFriendsList(userId) {
+      FB.api(
+        "/" + userId + "/taggable_friends?fields=id,name",
+        function (response) {
+          if (response && !response.error) {
+            var outputTempl = '';
+            response.data.map(function(friendObj) {
+              outputTempl += '<li><label><input type=checkbox name="friend" value=' + friendObj.name +  '/>' + friendObj.name + '</label></li>';
+            });
+            MatchApp.hideLoginBtn();
+            $('#friendsListContainer ul').append($(outputTempl));
+          }
+        }
+      );
+    }
+    function getUserInfo(userId) {
+      FB.api(
+        "/" + userId + "?fields=" + profileFields.join(','),
+        function (response) {
+          // First time login -> Register on app
+          $.ajax({
+            url: '/facebooklogin',
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
+              facebook_id: response.id,
+              name: response.name,
+              gender: response.gender,
+              min_age: response.age_range.min,
+              email: response.email
+            }),
+            success: function(loginResponse) {
+              // Show user list now
+              MatchApp.showFriendsList(response.id);
+            }
+          })
+        }
+      );
+    }
+    function showLoginBtn() {
+      document.getElementById('fbContainer').style.display = 'block';
+    }
+    function hideLoginBtn() {
+      document.getElementById('fbContainer').style.display = 'none';
+    }
+    function showFriendsList(userId) {
+      MatchApp.getFriendsList(userId);
+    }
+    return {
+      getFriendsList: getFriendsList,
+      showLoginBtn: showLoginBtn,
+      hideLoginBtn: hideLoginBtn,
+      getUserInfo: getUserInfo,
+      showFriendsList: showFriendsList
+    };
+  })();
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId            : Constants.APP_ID,
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v2.11'
+    });
+    FB.getLoginStatus(function(response) {
+      if (response.status === Constants.CONNECTED) {
+        // Logged in and has authorized the app, call to get friends list
+        var userId = response.authResponse.userID;
+        MatchApp.showFriendsList(userId);
+      } else if (response.status === Constants.NOT_AUTHORIZED) {
+        // Not authenticated our app, ask him to login
+        MatchApp.showLoginBtn();
+      }
+    });
+  };
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      var userId = response.authResponse.userID;
+      MatchApp.getUserInfo(userId);
+    });
+  }
+  $('#friendsListContainer').on('click', 'li', function(event) {
+    var target = $(event.target);
+    console.log(target);
+  });
+  $('#updateBtn').click(function(event) {
+    $.ajax({
+      url: ''
+    });
+  });
+  (function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>

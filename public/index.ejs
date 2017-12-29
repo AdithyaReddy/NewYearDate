@@ -1,0 +1,29 @@
+<!doctype html>
+<head>
+  <% include ./partials/documentHead %>
+</head>
+<body>
+  <h1>Welcome to MatchBook</h1>
+  <div id="fbContainer">
+    <div id="fb-root"></div>
+    <div
+      class="fb-login-button"
+      data-scope="public_profile,email,user_friends"
+      data-max-rows="1"
+      data-size="large"
+      data-button-type="continue_with"
+      data-show-faces="false"
+      data-auto-logout-link="false"
+      data-onlogin="checkLoginState();"
+      data-use-continue-as="false">
+    </div>
+  </div>
+  <div id="friendsListContainer">
+    <ul>
+    </ul>
+    <button id="updateBtn">Update List</button>
+  </div>
+  
+  <% include ./partials/script %>
+</body>
+</html>
