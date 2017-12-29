@@ -24,8 +24,12 @@
         "/" + userId + "/taggable_friends?fields=id,name",
         function (response) {
           if (response && !response.error) {
-            console.log('Friends List', response);
-            MatchApp.showFriendsList(response);
+            var outputTempl = '';
+            response.data.map(function(friendObj) {
+              outputTempl += '<li><label><input type=checkbox name="friend" value=' + friendObj.name +  '/>' + friendObj.name + '</label></li>';
+            });
+            MatchApp.hideLoginBtn();
+            $('#friendsListContainer ul').append($(outputTempl));
           }
         }
       );
@@ -37,17 +41,19 @@
           // First time login -> Register on app
           $.ajax({
             url: '/facebooklogin',
-            type: 'POST',
-            data: {
+            method: 'POST',
+            dataType: 'JSON',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
               facebook_id: response.id,
               name: response.name,
               gender: response.gender,
               min_age: response.age_range.min,
               email: response.email
-            },
-            success: function(response) {
+            }),
+            success: function(loginResponse) {
               // Show user list now
-              MatchApp.getFriendsList(userId);
+              MatchApp.showFriendsList(response.id);
             }
           })
         }
@@ -59,16 +65,15 @@
     function hideLoginBtn() {
       document.getElementById('fbContainer').style.display = 'none';
     }
-    function showFriendsList(response) {
-      hideLoginBtn();
-      
-      document.getElementById('friendsListContainer').style.display = 'block';
+    function showFriendsList(userId) {
+      MatchApp.getFriendsList(userId);
     }
     return {
       getFriendsList: getFriendsList,
       showLoginBtn: showLoginBtn,
       hideLoginBtn: hideLoginBtn,
-      getUserInfo: getUserInfo
+      getUserInfo: getUserInfo,
+      showFriendsList: showFriendsList
     };
   })();
 
@@ -80,18 +85,15 @@
       version          : 'v2.11'
     });
     FB.getLoginStatus(function(response) {
-      console.log('User response: ', response);
       if (response.status === Constants.CONNECTED) {
         // Logged in and has authorized the app, call to get friends list
         var userId = response.authResponse.userID;
-        MatchApp.getFriendsList(userId);
+        MatchApp.showFriendsList(userId);
       } else if (response.status === Constants.NOT_AUTHORIZED) {
         // Not authenticated our app, ask him to login
         MatchApp.showLoginBtn();
-      } else {
-
       }
-  });
+    });
   };
   function checkLoginState() {
     FB.getLoginStatus(function(response) {
@@ -99,6 +101,15 @@
       MatchApp.getUserInfo(userId);
     });
   }
+  $('#friendsListContainer').on('click', 'li', function(event) {
+    var target = $(event.target);
+    console.log(target);
+  });
+  $('#updateBtn').click(function(event) {
+    $.ajax({
+      url: ''
+    });
+  });
   (function(d, s, id){
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) {return;}
