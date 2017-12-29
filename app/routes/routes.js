@@ -1,8 +1,13 @@
+var path = require('path');
+
 module.exports = function(app, db, PythonShell) {
     app.post('/facebooklogin', (req, res) => {
         var fb_id = req.body.facebook_id;
+        console.log(fb_id+' this is the facebook_id that is trying to login\n\n');
+        console.log(req.body+' this is the BODY that is trying to login\n\n');
         if (fb_id) {
             const details = {"facebook_id" : fb_id};
+            console.log(fb_id+' this is the facebook_id that is trying to login');
             db.collection('users').findOne(details, (err, item) => {
                 if (err) {
                   return res.send({'error':'An error has occurred fetching the user object'});
@@ -14,18 +19,14 @@ module.exports = function(app, db, PythonShell) {
                         var facebook_id = req.body.facebook_id;
                         var name = req.body.name;
                         var gender = req.body.gender;
-                        var auth_token = req.body.auth_token;
                         var min_age = req.body.min_age;
-                        var max_age = req.body.max_age;
                         var email = req.body.email;
 
                         const userObj = {
                             'facebook_id' : facebook_id,
                             'name' : name,
                             'gender' : gender,
-                            'auth_token' : auth_token,
                             'min_age' : min_age,
-                            'max_age' : max_age,
                             'email' : email
                         };
 
@@ -33,7 +34,7 @@ module.exports = function(app, db, PythonShell) {
                             if (err) { 
                               return res.send({ 'error': 'An error has occurred while creating the user object' }); 
                             } else {
-                              return res.send(result.ops[0]);
+                              return res.send({'result' : 'Hurray!!! User successfully logged in.'});
                             }
                         });
                     }
@@ -94,6 +95,11 @@ module.exports = function(app, db, PythonShell) {
             });
         }
         return res.send({ 'error': 'No Facebook usernames received' });
+    });
+
+
+    app.get('/', (req, res) => {
+        res.render(path.join(__dirname + '/../../public/index'));
     });
 
   };
