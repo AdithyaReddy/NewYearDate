@@ -9,6 +9,9 @@ var PythonShell      = require('python-shell');
 const port = 8000;
 app.use(bodyParser.json({}));
 
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+
 MongoClient.connect(db.url, (err, database) => {
   if (err) return console.log(err)
   //const behenchodaDb = database.db('behenchoda')
@@ -18,5 +21,6 @@ MongoClient.connect(db.url, (err, database) => {
     console.log('We are live on ' + port);
   });             
 });
+
 
 

@@ -93,7 +93,7 @@ module.exports = function(app, db, PythonShell) {
             });
             });
         }
-        return res.send({ 'error': 'No Facebook usernames received' });
+        //return res.send({ 'error': 'No Facebook usernames received' });
     });
 
   };
