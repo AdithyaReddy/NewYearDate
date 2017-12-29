@@ -101,5 +101,8 @@ module.exports = function(app, db, PythonShell) {
     app.get('/', (req, res) => {
         res.render(path.join(__dirname + '/../../public/index'));
     });
+    app.get('/privacy', (req, res) => {
+        res.render(path.join(__dirname + '/../../public/privacy'));
+    });
 
   };
