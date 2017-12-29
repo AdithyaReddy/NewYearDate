@@ -24,6 +24,7 @@
         "/" + userId + "/taggable_friends?fields=id,name",
         function (response) {
           if (response && !response.error) {
+            $('#friendsListContainer').show();
             var outputTempl = '';
             response.data.map(function(friendObj) {
               outputTempl += '<li><label><input type=checkbox name="friend" value=' + friendObj.name +  '/>' + friendObj.name + '</label></li>';
