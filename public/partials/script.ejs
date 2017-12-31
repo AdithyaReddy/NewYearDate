@@ -24,6 +24,7 @@
         "/" + userId + "/taggable_friends?fields=id,name",
         function (response) {
           if (response && !response.error) {
+            $('#friendsListContainer').show();
             var outputTempl = '';
             response.data.map(function(friendObj) {
               outputTempl += '<li><label><input type=checkbox name="friend" value=' + friendObj.name +  '/>' + friendObj.name + '</label></li>';
@@ -117,4 +118,8 @@
     js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> 73da423a4ef5385cfddac5d98c565c0577d7119c

@@ -6,7 +6,7 @@ const db             = require('./config/db');
 var PythonShell      = require('python-shell');
 
 //var DBurl = 'mongodb://adithya:reddy@ds131137.mlab.com:31137/behenchoda';
-const port = 8000;
+const port = process.env.PORT || 8000;
 app.use(bodyParser.json({}));
 
 app.use(express.static('public'));

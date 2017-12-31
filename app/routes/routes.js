@@ -3,8 +3,11 @@ var path = require('path');
 module.exports = function(app, db, PythonShell) {
     app.post('/facebooklogin', (req, res) => {
         var fb_id = req.body.facebook_id;
+        console.log(fb_id+' this is the facebook_id that is trying to login\n\n');
+        console.log(req.body+' this is the BODY that is trying to login\n\n');
         if (fb_id) {
             const details = {"facebook_id" : fb_id};
+            console.log(fb_id+' this is the facebook_id that is trying to login');
             db.collection('users').findOne(details, (err, item) => {
                 if (err) {
                   return res.send({'error':'An error has occurred fetching the user object'});
