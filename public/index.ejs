@@ -19,11 +19,20 @@
     </div>
   </div>
   <div id="friendsListContainer" style="display:none">
-    <ul>
-    </ul>
-    <button id="updateBtn">Update List</button>
+    <div>
+      <input type="text" name="name-1" placeholder="Profile URL" />
+    </div>
+    <div>
+      <input type="text" name="name-2" placeholder="Profile URL(Optional)" />
+    </div>
+    <div>
+      <input type="text" name="name-3" placeholder="Profile URL(Optional)" />
+    </div>
+    <button id="updateBtn">Submit</button>
   </div>
-  
+  <div id="successContainer" style="display: none">
+    Thank you for your submission. You will notified when someone from this list selects you as your crush. :)
+  </div>
   <% include ./partials/script %>
 </body>
 </html>

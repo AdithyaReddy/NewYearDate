@@ -20,20 +20,23 @@
 
   var MatchApp = (function() {
     function getFriendsList(userId) {
-      FB.api(
-        "/" + userId + "/taggable_friends?fields=id,name",
-        function (response) {
-          if (response && !response.error) {
-            $('#friendsListContainer').show();
-            var outputTempl = '';
-            response.data.map(function(friendObj) {
-              outputTempl += '<li><label><input type=checkbox name="friend" value=' + friendObj.name +  '/>' + friendObj.name + '</label></li>';
-            });
-            MatchApp.hideLoginBtn();
-            $('#friendsListContainer ul').append($(outputTempl));
-          }
-        }
-      );
+      window.userId = userId;
+      // FB.api(
+      //   "/" + userId + "/taggable_friends?fields=id,name",
+      //   function (response) {
+      //     if (response && !response.error) {
+      //       $('#friendsListContainer').show();
+      //       var outputTempl = '';
+      //       response.data.map(function(friendObj) {
+      //         outputTempl += '<li><label><input type=checkbox name="friend" value=' + friendObj.name +  '/>' + friendObj.name + '</label></li>';
+      //       });
+      //       MatchApp.hideLoginBtn();
+      //       $('#friendsListContainer ul').append($(outputTempl));
+      //     }
+      //   }
+      // );
+      $('#friendsListContainer').show();
+      MatchApp.hideLoginBtn();
     }
     function getUserInfo(userId) {
       FB.api(
@@ -106,10 +109,26 @@
     var target = $(event.target);
     console.log(target);
   });
+  function getCrushList() {
+    var value1 = (($('input[name="name-1"]').val() || '').split('.com/')[1] || '').split('?')[0];
+    var value2 = (($('input[name="name-2"]').val() || '').split('.com/')[1] || '').split('?')[0];
+    var value3 = (($('input[name="name-3"]').val() || '').split('.com/')[1] || '').split('?')[0];
+    var arr = [
+      value1,
+      value2,
+      value3
+    ].filter(function(val) { return val !== '' && typeof val !== 'undefined' });
+    return arr;
+  }
   $('#updateBtn').click(function(event) {
     $.ajax({
-      url: ''
+      data: {
+        facebook_id: window.userId,
+        crush_list: getCrushList()
+      }
     });
+    $('#friendsListContainer').hide();
+    $('#successContainer').show();
   });
   (function(d, s, id){
     var js, fjs = d.getElementsByTagName(s)[0];
