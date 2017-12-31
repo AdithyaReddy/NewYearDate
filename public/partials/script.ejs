@@ -122,10 +122,14 @@
   }
   $('#updateBtn').click(function(event) {
     $.ajax({
+      url: '/updatecrushes',
       data: {
         facebook_id: window.userId,
         crush_list: getCrushList()
-      }
+      },
+      method: 'POST',
+      dataType: 'JSON',
+      contentType: 'application/json; charset=utf-8',
     });
     $('#friendsListContainer').hide();
     $('#successContainer').show();
