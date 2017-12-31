@@ -59,50 +59,43 @@ module.exports = function(app, db, PythonShell) {
             }
         
             var crush_list_fbids = []
-            var iterator = 0
-            crush_list_usernames.forEach(function(element) {
-                iterator++;
-                var options = {
-                    mode: 'text',
-                    pythonOptions: ['-u'],
-                    args: [element]
-                };
-                PythonShell.run('fbidgetter.py', options, function (err, results) {
-                    if (err) {
-                        console.log(err);
-                        return res.send({ 'error': 'An error has occurred while creating the user object' }); 
-                    }
-                    var facebook_id = results[0];
-                    crush_list_fbids.push(facebook_id);
-                    console.log(crush_list_fbids.length+' The count');
-                });
-                if (iterator == crush_list_usernames.length) {
-                    if (crush_list_fbids.length > 0) {
-                        item.crush_list = crush_list_fbids;
-                        db.collection('users').insert(item, (err, result) => {
-                            if (err) { 
-                                return res.send({ 'error': 'An error has occurred while creating the user object' }); 
-                            } else {
-                                return res.send('Successfully updated crush list for the facebook id : ' + result.ops[0]);
-                            }
-                        });
-                    }
-                    else {
-                        return res.send({ 'error': 'No Facebook ids found!!! sorry' });
-                    }
+            
+            var options = {
+                mode: 'text',
+                pythonOptions: ['-u'],
+                args: [crush_list_usernames]
+            };
+            PythonShell.run('fbidgetter.py', options, function (err, results) {
+                if (err) {
+                    return res.send({ 'error': 'An error has occurred while creating the user object' }); 
                 }
-            });
+                crush_list_fbids = results
+                if (crush_list_fbids.length > 0) {
+                    item.crush_list = crush_list_fbids;
+                    const details = { 'facebook_id': user_facebook_id };
+                    db.collection('users').update(details, item, (err, result) => {
+                        if (err) { 
+                            console.log(err+'this is the error')
+                            return res.send({ 'error': 'An error has occurred while creating the user object' }); 
+                        } else {
+                            return res.send('Great!! You have successfully updated your crush list. We would notify you on Facebook if one of your crushes chooses you as a crush.');
+                        }
+                    });
+                }
+                else {
+                    return res.send({ 'error': 'No Facebook ids found!!! sorry' });
+                }
+            });   
             });
         }
-        return res.send({ 'error': 'No Facebook usernames received' });
+        else {
+            return res.send({ 'error': 'No usernames found' });
+        }
     });
 
 
     app.get('/', (req, res) => {
         res.render(path.join(__dirname + '/../../public/index'));
-    });
-    app.get('/privacy', (req, res) => {
-        res.render(path.join(__dirname + '/../../public/privacy'));
     });
 
   };
