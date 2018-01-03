@@ -67,7 +67,7 @@ module.exports = function(app, db, PythonShell) {
             };
             PythonShell.run('fbidgetter.py', options, function (err, results) {
                 if (err) {
-                    return res.send({ 'error': 'An error has occurred while creating the user object' }); 
+                    return res.send({ 'error': 'An error occurred while fetching Facebook IDs' }); 
                 }
                 crush_list_fbids = results
                 if (crush_list_fbids.length > 0) {
@@ -76,7 +76,7 @@ module.exports = function(app, db, PythonShell) {
                     db.collection('users').update(details, item, (err, result) => {
                         if (err) { 
                             console.log(err+'this is the error')
-                            return res.send({ 'error': 'An error has occurred while creating the user object' }); 
+                            return res.send({ 'error': 'An error has occurred while updating the user object' }); 
                         } else {
                             return res.send('Great!! You have successfully updated your crush list. We would notify you on Facebook if one of your crushes chooses you as a crush.');
                         }
